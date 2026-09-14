@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gmail Messenger</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-mark">G</div>
+          <div>
+            <p class="eyebrow">Inbox</p>
+            <h1>Gmail Messenger</h1>
+          </div>
+        </div>
+        <button class="ghost-button" id="refreshButton" type="button">Refresh</button>
+      </header>
+
+      <main class="messenger-layout">
+        <aside class="sidebar" aria-label="Sender list">
+          <div class="sidebar-header">
+            <span>Chats</span>
+            <span class="badge" id="threadCount">0</span>
+          </div>
+          <div id="senderList" class="sender-list" aria-live="polite"></div>
+        </aside>
+
+        <section class="thread-panel" aria-live="polite">
+          <div class="thread-header" id="threadHeader"></div>
+          <div id="messageList" class="message-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "Gmail Messenger",
+  "description": "A message-style Gmail front-end with sender threads, AI summaries, and expandable full emails.",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "hello.html",
+    "default_icon": "hello_extensions.png"
+  }
+}
