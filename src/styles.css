@@ -17,6 +17,8 @@
   --sidebar-bg: rgba(255, 255, 255, 0.65);
   --topbar-bg: rgba(255, 255, 255, 0.72);
   --thread-bg: linear-gradient(180deg, rgba(247, 250, 255, 0.8), rgba(255, 255, 255, 0.5));
+  --scrollbar-thumb: rgba(79, 108, 255, 0.28);
+  --scrollbar-track: rgba(148, 163, 184, 0.12);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,6 +41,8 @@
     --sidebar-bg: rgba(15, 23, 42, 0.8);
     --topbar-bg: rgba(15, 23, 42, 0.8);
     --thread-bg: linear-gradient(180deg, rgba(15, 23, 42, 0.8), rgba(17, 24, 39, 0.9));
+    --scrollbar-thumb: rgba(138, 162, 255, 0.35);
+    --scrollbar-track: rgba(148, 163, 184, 0.08);
   }
 }
 
@@ -49,8 +53,9 @@
 html, body {
   margin: 0;
   width: 760px;
-  min-width: 760px;
+  min-width: 620px;
   height: 560px;
+  min-height: 420px;
   background: var(--bg);
   color: var(--text);
   font-family: "Segoe UI", sans-serif;
@@ -66,13 +71,39 @@ button {
 }
 
 .app-shell {
+  position: relative;
   width: 760px;
   height: 560px;
-  min-width: 760px;
+  min-width: 620px;
+  min-height: 420px;
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, #f7faff 0%, #eef4ff 100%);
   overflow: hidden;
+}
+
+.resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 0 40%, rgba(79, 108, 255, 0.5) 40% 100%);
+  border-top-left-radius: 10px;
+  box-shadow: -2px -2px 0 0 rgba(79, 108, 255, 0.15);
+  z-index: 20;
+}
+
+.resize-handle::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid rgba(79, 108, 255, 0.8);
+  border-bottom: 2px solid rgba(79, 108, 255, 0.8);
 }
 
 .topbar {
@@ -173,12 +204,16 @@ h1 {
   grid-template-columns: 240px 1fr;
   flex: 1;
   min-height: 0;
+  height: 100%;
 }
 
 .sidebar {
   background: var(--sidebar-bg);
   border-right: 1px solid var(--border);
   padding: 10px 8px 12px;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .sidebar-header {
@@ -208,8 +243,29 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 0 4px 6px;
+  min-height: 0;
+  height: calc(100% - 40px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.sender-list::-webkit-scrollbar,
+.message-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sender-list::-webkit-scrollbar-track,
+.message-list::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.sender-list::-webkit-scrollbar-thumb,
+.message-list::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
 }
 
 .sender-item {
@@ -225,6 +281,90 @@ h1 {
   color: var(--text);
   text-align: left;
   transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.skeleton-item {
+  cursor: default;
+  pointer-events: none;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(148, 163, 184, 0.14);
+  border-radius: 8px;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  animation: skeleton-shimmer 1.3s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.avatar-skeleton {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.skeleton-line {
+  display: block;
+  height: 12px;
+  width: 100%;
+  border-radius: 999px;
+}
+
+.skeleton-line.short {
+  width: 74%;
+}
+
+.skeleton-line.tiny {
+  width: 32px;
+  height: 10px;
+}
+
+.skeleton-line.long {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.skeleton-box {
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 12px;
+}
+
+.skeleton-box.summary {
+  height: 66px;
+}
+
+.skeleton-box.body {
+  height: 120px;
+}
+
+.skeleton-card .message-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.skeleton-card .subject {
+  width: 64%;
+  height: 18px;
+}
+
+.skeleton-card .right {
+  margin-left: auto;
 }
 
 .sender-item:hover,
@@ -282,8 +422,10 @@ h1 {
 .thread-panel {
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: hidden;
   min-width: 0;
+  min-height: 0;
+  height: 100%;
   background: var(--panel);
 }
 
@@ -309,9 +451,13 @@ h1 {
 
 .message-list {
   flex: 1;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 16px 18px 20px;
   background: var(--thread-bg);
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 .message-card {
@@ -321,6 +467,12 @@ h1 {
   padding: 14px 16px 10px;
   box-shadow: 0 10px 20px rgba(20, 30, 55, 0.04);
   margin-bottom: 14px;
+}
+
+.message-card.skeleton-card {
+  padding-bottom: 14px;
+  background: rgba(148, 163, 184, 0.06);
+  border-style: dashed;
 }
 
 .message-top {
@@ -341,8 +493,14 @@ h1 {
   white-space: nowrap;
 }
 
-.message-summary {
+.message-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   margin-top: 12px;
+}
+
+.message-summary {
   padding: 10px 12px;
   border-radius: 12px;
   background: linear-gradient(135deg, rgba(79, 108, 255, 0.08), rgba(125, 202, 219, 0.1));
@@ -350,6 +508,19 @@ h1 {
   cursor: pointer;
   width: 100%;
   text-align: left;
+  flex: 1;
+}
+
+.view-full-button {
+  flex-shrink: 0;
+  align-self: center;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 9px 10px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .summary-label {
@@ -374,17 +545,23 @@ h1 {
 .message-body {
   display: none;
   margin-top: 12px;
-  padding: 14px 16px;
   border-radius: 14px;
   background: var(--message-body-bg);
   border: 1px solid var(--border);
-  color: var(--message-body-text);
-  line-height: 1.6;
-  white-space: pre-wrap;
+  overflow: hidden;
 }
 
 .message-body.open {
   display: block;
+}
+
+.message-iframe {
+  display: block;
+  width: 100%;
+  min-height: 180px;
+  max-height: 420px;
+  border: 0;
+  background: var(--message-body-bg);
 }
 
 .message-card.open {

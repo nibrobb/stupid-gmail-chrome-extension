@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-shell">
+    <div class="app-shell" id="appShell">
       <header class="topbar">
         <div class="brand-wrap">
           <div class="brand-mark">G</div>
@@ -16,8 +16,13 @@
             <h1>Gmail Messenger</h1>
           </div>
         </div>
-        <button class="ghost-button" id="refreshButton" type="button">Refresh</button>
+        <div class="topbar-actions">
+          <button class="ghost-button" id="authButton" type="button">Connect Gmail</button>
+          <button class="ghost-button" id="refreshButton" type="button">Refresh</button>
+        </div>
       </header>
+
+      <div id="statusBanner" class="status-banner" aria-live="polite"></div>
 
       <main class="messenger-layout">
         <aside class="sidebar" aria-label="Sender list">
@@ -33,6 +38,8 @@
           <div id="messageList" class="message-list"></div>
         </section>
       </main>
+
+      <div class="resize-handle" id="resizeHandle" aria-label="Resize panel" title="Resize"></div>
     </div>
 
     <script src="popup.js"></script>

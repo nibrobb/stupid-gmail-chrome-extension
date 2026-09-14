@@ -1,9 +1,19 @@
 {
-  "name": "Gmail Messenger",
+  "name": "Messages",
   "description": "A message-style Gmail front-end with sender threads, AI summaries, and expandable full emails.",
   "version": "1.0.0",
   "manifest_version": 3,
-  "permissions": ["storage"],
+  "permissions": ["storage", "identity"],
+  "host_permissions": [
+    "https://www.googleapis.com/*"
+  ],
+  "oauth2": {
+    "client_id": "569473161365-tnjqu89vm4huj8cg3ru19ref787jrm00.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.send"
+    ]
+  },
   "action": {
     "default_popup": "hello.html",
     "default_icon": "hello_extensions.png"
